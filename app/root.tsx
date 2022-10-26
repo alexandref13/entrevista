@@ -1,12 +1,15 @@
 import type { MetaFunction } from "@remix-run/node";
 import {
-  Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
+import { FeedProvider } from "./contexts/Feed";
+import { FormProvider } from "./contexts/Form";
+import { SearchProvider } from "./contexts/Search";
+import { GlobalStyle } from "./styles/GlobalStyle";
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
@@ -19,14 +22,23 @@ export default function App() {
     <html lang="en">
       <head>
         <Meta />
-        <Links />
+        {typeof document === "undefined"
+          ? "__STYLES__"
+          : null}
       </head>
-      <body>
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-      </body>
+        <FeedProvider>
+          <FormProvider>
+            <SearchProvider>
+                <body>
+                  <Outlet />
+                  <ScrollRestoration />
+                  <Scripts />
+                  <GlobalStyle />
+                  <LiveReload />
+                </body>
+            </SearchProvider>
+          </FormProvider>
+        </FeedProvider>
     </html>
   );
 }
